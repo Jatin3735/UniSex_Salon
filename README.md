@@ -1,215 +1,516 @@
-# SalonX
 
-A full-stack salon booking app. Customers pick services, choose a stylist
-qualified for **all** of them, book a real fifteen-minute slot on a live
-calendar, and get a booking token. Staff manage their own schedule; admins see
-everything.
+# ✂️ SalonX
 
-**Stack:** React 19 + Vite + Tailwind CSS v4 on the front end, Express +
-MongoDB (Mongoose) + JWT auth on the back end.
+> A premium, modern salon management and booking platform built with React, Node.js, Express, and MongoDB.
+
+SalonX is a full-stack salon platform designed to provide a smooth customer booking experience while giving salon administrators complete control over staff, services, offers, bookings, customers, and salon content.
 
 ---
 
-## What it does
+## ✨ Features
 
-- **Real availability.** Slots are generated server-side in fifteen-minute
-  steps between 10:00 and 20:00. A 90-minute treatment blocks the whole 90
-  minutes, past times are disabled for today, and anything that would run past
-  closing is greyed out.
-- **No double-booking, ever.** A unique partial multikey index on
-  `{ staff, date, slotKeys }` makes MongoDB itself reject any second booking
-  that overlaps an existing one — no read-then-write race, no transaction.
-  Cancelling a booking releases its slots immediately.
-- **Server-authoritative.** Price, duration, token and payment status are all
-  computed on the server from its own price list; the client never sends them.
-- **Roles.** `customer` / `staff` / `admin`, enforced on both the API and the
-  router. Self-registration always produces a customer.
-- **Survives a mid-flow login.** The in-progress booking is mirrored to
-  storage, so logging in at the payment step returns you exactly where you were.
+### 👤 Customer Experience
+
+- Premium responsive salon website
+- User registration and login
+- JWT-based authentication
+- Customer profile management
+- Profile avatar
+- Date of birth and preferences
+- Saved/favourite services
+- Appointment management
+- Booking history
+- Offers and promotions
+- Notification preferences
+- Password management
+
+### 🛠️ Admin Management
+
+- Protected admin dashboard
+- Dashboard overview
+- Staff management
+- Service management
+- Offer management
+- Announcement management
+- Booking management
+- Customer management
+- Gallery management
+- Review management
+- Salon settings
+- Activate/deactivate records
+- Search and filtering
+- Role-based authorization
+
+### 📅 Booking System
+
+- Service selection
+- Staff selection
+- Date and time selection
+- Booking creation
+- Booking status management
+- Staff assignment
+- Appointment updates
+- Cancellation handling
+
+Supported booking statuses:
+
+```text
+Pending
+Confirmed
+Completed
+Cancelled
+No-show
+````
+
+### 💇 Staff Management
+
+Administrators can manage:
+
+* Staff name
+* Profile image
+* Role
+* Specialization
+* Experience
+* Phone
+* Email
+* Services
+* Working days
+* Working hours
+* Active/inactive status
+
+### 💈 Service Management
+
+Services can contain:
+
+* Service name
+* Description
+* Category
+* Price
+* Duration
+* Image
+* Assigned staff
+* Featured status
+* Display order
+* Active/inactive status
+
+Changes made from the admin dashboard are stored in MongoDB and reflected through the API.
+
+### 🎁 Offers & Announcements
+
+Manage:
+
+* Promotional offers
+* Discount types
+* Discount values
+* Promo codes
+* Start/end dates
+* Featured offers
+* Announcement messages
+* Announcement locations
+* Active/inactive campaigns
+
+### 🖼️ Gallery
+
+* Salon image gallery
+* Image management
+* Gallery item activation
+* Admin-controlled content
 
 ---
 
-## Prerequisites
+# 🎨 Design & Experience
 
-- Node.js 18+
-- A MongoDB connection string. The easiest is a free
-  [MongoDB Atlas](https://cloud.mongodb.com) cluster — nothing to install
-  locally.
+SalonX focuses on a premium cinematic salon experience.
+
+### Visual direction
+
+* Dark luxury aesthetic
+* Neutral and ivory tones
+* Champagne/gold accents
+* Glassmorphism
+* Smooth transitions
+* Responsive layouts
+* Premium typography
+* Micro-interactions
+
+### Animations
+
+The frontend uses modern animation technologies including:
+
+* GSAP
+* ScrollTrigger
+* Framer Motion
+* Three.js / React Three Fiber
+* Smooth scrolling
+* Interactive UI elements
+* Scroll-based animations
+* 3D hero interactions
+
+The goal is to create a polished experience rather than a traditional static salon website.
 
 ---
 
-## Setup
+# 🧱 Tech Stack
 
-### 1. Install dependencies (front end + server)
+## Frontend
 
-```bash
-npm run setup
+* React
+* Vite
+* JavaScript
+* Tailwind CSS
+* Framer Motion
+* GSAP
+* Three.js
+* React Three Fiber
+* React Router
+* Axios
+* Lucide React
+
+## Backend
+
+* Node.js
+* Express.js
+* MongoDB
+* Mongoose
+* JWT Authentication
+* bcryptjs
+
+## Security
+
+* JWT authentication
+* Role-based authorization
+* Password hashing
+* Helmet
+* CORS
+* Express rate limiting
+* MongoDB sanitization
+* Environment variables
+
+---
+
+# 📁 Project Structure
+
+```text
+Salon/
+│
+├── public/
+│
+├── src/
+│   ├── components/
+│   ├── pages/
+│   ├── layouts/
+│   ├── hooks/
+│   ├── services/
+│   ├── context/
+│   └── ...
+│
+├── server/
+│   ├── scripts/
+│   ├── src/
+│   │   ├── config/
+│   │   ├── controllers/
+│   │   ├── middleware/
+│   │   ├── models/
+│   │   ├── routes/
+│   │   └── index.js
+│   │
+│   ├── uploads/
+│   └── package.json
+│
+├── .gitignore
+├── index.html
+├── package.json
+├── package-lock.json
+├── vite.config.js
+└── README.md
 ```
 
-(That runs `npm install` here and in `server/`. You can run the two installs
-by hand if you prefer.)
+---
 
-### 2. Configure the server
+# ⚙️ Installation
+
+## 1. Clone the repository
+
+```bash
+git clone https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git
+```
+
+## 2. Navigate into the project
+
+```bash
+cd Salon
+```
+
+## 3. Install frontend dependencies
+
+```bash
+npm install
+```
+
+## 4. Install backend dependencies
 
 ```bash
 cd server
-cp .env.example .env        # Windows: copy .env.example .env
+npm install
+cd ..
 ```
 
-Then edit `server/.env`:
+---
 
-- **`MONGODB_URI`** — your Atlas connection string, e.g.
-  `mongodb+srv://USER:PASS@cluster0.xxxxx.mongodb.net/salonx?retryWrites=true&w=majority`
-  In Atlas: create a free cluster, add a database user, and under **Network
-  Access** allow your current IP (or `0.0.0.0/0` for a demo). URL-encode any
-  special characters in the password.
-- **`JWT_SECRET`** — any long random string. Generate one with:
-  ```bash
-  node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
-  ```
+# 🔐 Environment Variables
 
-The front end talks to `http://localhost:5000` by default; override it with a
-root `.env` (`VITE_API_URL=`) only if you move the API.
+Create the required environment files locally.
 
-### 3. Run it
+### Root `.env`
+
+```env
+VITE_API_URL=http://localhost:5000
+```
+
+### Server `.env`
+
+```env
+PORT=5000
+
+MONGODB_URI=your_mongodb_connection_string
+
+JWT_SECRET=your_jwt_secret
+```
+
+> Never commit `.env` files or database credentials to GitHub.
+
+---
+
+# ▶️ Running the Project
+
+From the project root:
 
 ```bash
 npm run dev
 ```
 
-This starts the API (`:5000`) and the Vite dev server (`:5173`) together. Open
-http://localhost:5173.
+This starts both:
 
-On first boot the server seeds services, staff and demo logins (idempotent, so
-it's safe on every restart). Re-seed manually any time with `npm run seed`.
+### Frontend
 
----
-
-## Demo logins
-
-All use the password **`Password123`**:
-
-| Role     | Email               |
-|----------|---------------------|
-| Staff    | `ravi@salonx.com`   |
-| Customer | `demo@salonx.com`   |
-| Admin    | `admin@salonx.com`  |
-
-Or just create a customer account through the signup form.
-
----
-
-## Admin panel (hidden)
-
-The admin panel is **not linked anywhere** in the UI and `/admin` is not a
-route — it 404s like any other unknown URL. It is served only at a secret path
-set by `VITE_ADMIN_PATH` (see the root `.env`), e.g.:
-
-```
-http://localhost:5173/sx-console-x7k9q2
+```text
+http://localhost:5173
 ```
 
-Reaching the path is not enough: it shows a **lock screen that asks for a
-username + password every visit**, verifies the account is an admin, then opens
-a **15-minute auto-locking session**. Sign in there with the admin account
-above.
+### Backend
 
-> **Security note.** A Vite `VITE_*` value is compiled into the client bundle,
-> so the path string itself is discoverable by someone reading the built JS.
-> The path is only the first thin layer — the real protection is the credential
-> gate, the admin-role check, and the server-side `requireRole("admin")` guard
-> on every admin endpoint. Choose your own unguessable `VITE_ADMIN_PATH`.
-
----
-
-## Security
-
-This build hardens several things worth knowing about:
-
-- **Rotate the shipped credentials.** Earlier `server/.env` held a weak
-  `JWT_SECRET` and a live Atlas connection string whose password equalled the
-  username. The `JWT_SECRET` has been replaced with a strong random value, and
-  the server now refuses to boot with a secret under 32 characters. **You must
-  still rotate the MongoDB Atlas database password** in the Atlas console and
-  paste the new URI into `server/.env` — treat the old one as compromised.
-- **Rate limiting** on `/api/auth/*` (8 attempts / 15 min) and a looser global
-  API limiter, via `express-rate-limit`.
-- **Security headers** via `helmet`.
-- **No stack-trace leaks.** 500 responses only include a stack when
-  `DEBUG_ERRORS=true`. Set `NODE_ENV=production` on deploy.
-- **Unguessable booking tokens** generated with `crypto.randomInt`; a staff
-  account can only read bookings on its own calendar (not enumerate everyone's).
-- **Query sanitization** (`express-mongo-sanitize`) plus explicit coercion of
-  filter params blocks Mongo operator injection.
-- **Timezone.** All availability math uses `SALON_TZ` (default `Asia/Kolkata`),
-  so the app is correct no matter what timezone the host runs in.
-
-Known demo trade-offs: the JWT is stored in `localStorage` (readable by any
-XSS; prefer an httpOnly cookie in production) and there is no server-side token
-revocation (logout is client-side; tokens live for `JWT_EXPIRES_IN`).
-
----
-
-## Scripts
-
-Root:
-
-| Command            | Does                                             |
-|--------------------|--------------------------------------------------|
-| `npm run dev`      | API + client together                            |
-| `npm run dev:web`  | Client only                                      |
-| `npm run dev:api`  | API only                                         |
-| `npm run build`    | Production build of the client                   |
-| `npm run lint`     | ESLint over client and server                    |
-| `npm run seed`     | Re-seed the database                             |
-| `npm run setup`    | Install client + server dependencies             |
-
-In `server/`:
-
-| Command           | Does                                              |
-|-------------------|---------------------------------------------------|
-| `npm run dev`     | Start the API with nodemon                         |
-| `npm start`       | Start the API                                      |
-| `npm run seed`    | Seed the database                                  |
-
----
-
-## Project layout
-
-```
-.
-├── src/                 React app
-│   ├── api/             fetch wrapper + one module per endpoint group
-│   ├── components/      shared UI (Layout, Navbar, cards, guards, …)
-│   ├── context/         AuthProvider + BookingProvider (split .js/.jsx)
-│   ├── lib/             storage, time and formatting helpers, useAsync
-│   └── pages/           customer / staff / admin / static
-└── server/
-    └── src/
-        ├── config/      env + db connection
-        ├── controllers/ auth, service, staff, booking
-        ├── middleware/  auth (JWT + roles), error handling
-        ├── models/      User, Staff, Service, Booking
-        ├── routes/      Express routers
-        └── utils/       slot math, service pricing, seed
+```text
+http://localhost:5000
 ```
 
 ---
 
-## API
+# 🗄️ Database
 
-| Method | Path                              | Access   |
-|--------|-----------------------------------|----------|
-| POST   | `/api/auth/register`              | public   |
-| POST   | `/api/auth/login`                 | public   |
-| GET    | `/api/auth/me`                    | auth     |
-| GET    | `/api/services`                   | public   |
-| GET    | `/api/staff`                      | public   |
-| GET    | `/api/staff/available?serviceIds=`| public   |
-| GET    | `/api/bookings/availability`      | public   |
-| POST   | `/api/bookings`                   | customer |
-| GET    | `/api/bookings/me`                | auth     |
-| GET    | `/api/bookings/staff`             | staff    |
-| GET    | `/api/bookings`                   | admin    |
-| GET    | `/api/bookings/token/:token`      | auth     |
-| PATCH  | `/api/bookings/:id/status`        | staff/admin (customer may cancel own) |
+SalonX uses MongoDB Atlas for persistent data storage.
+
+Main entities include:
+
+```text
+User
+Staff
+Service
+Booking
+Offer
+Announcement
+Gallery
+Review
+```
+
+The backend handles database communication through Mongoose.
+
+---
+
+# 🔑 Authentication
+
+SalonX uses JWT-based authentication.
+
+Users are separated using roles such as:
+
+```text
+CUSTOMER
+ADMIN
+```
+
+Protected backend routes verify authentication and authorization before allowing access to administrative functionality.
+
+Frontend route protection is used for the user experience, while backend authorization remains the actual security boundary.
+
+---
+
+# 🔄 Data Flow
+
+The application follows a full-stack data flow:
+
+```text
+Admin Dashboard
+       │
+       ▼
+React Frontend
+       │
+       ▼
+REST API
+       │
+       ▼
+Express.js
+       │
+       ▼
+Mongoose
+       │
+       ▼
+MongoDB Atlas
+       │
+       ▼
+Public Website / Customer Dashboard
+```
+
+For example:
+
+```text
+Admin creates service
+        ↓
+API receives request
+        ↓
+MongoDB stores service
+        ↓
+Public API fetches service
+        ↓
+Customer sees updated service
+```
+
+---
+
+# 📱 Responsive Design
+
+SalonX is designed to work across:
+
+* Desktop
+* Laptop
+* Tablet
+* Mobile
+
+The interface adapts navigation, layouts, cards, forms, and booking interfaces for different screen sizes.
+
+---
+
+# 🧪 Development
+
+Useful commands:
+
+### Start development server
+
+```bash
+npm run dev
+```
+
+### Build frontend
+
+```bash
+npm run build
+```
+
+### Preview production build
+
+```bash
+npm run preview
+```
+
+### Run backend separately
+
+```bash
+cd server
+npm run dev
+```
+
+---
+
+# 🛡️ Security Notes
+
+The following should never be committed:
+
+```text
+.env
+.env.example
+node_modules/
+uploads/
+dist/
+.claude/
+```
+
+Make sure MongoDB credentials, JWT secrets, API keys, and other private credentials remain local.
+
+---
+
+# 🚀 Future Improvements
+
+Potential future additions include:
+
+* Online payment integration
+* Email notifications
+* SMS notifications
+* WhatsApp booking notifications
+* Advanced appointment calendar
+* Staff availability management
+* Customer loyalty system
+* Membership plans
+* Gift cards
+* Advanced analytics
+* Revenue reports
+* Inventory management
+* Product management
+* Multi-branch salon support
+
+---
+
+# 👨‍💻 Development
+
+SalonX is developed as a full-stack web application with a focus on:
+
+* Modern UI/UX
+* Scalable backend architecture
+* Secure authentication
+* Database-driven content
+* Responsive design
+* Smooth animations
+* Maintainable code
+
+---
+
+# 📄 License
+
+This project is intended for educational and development purposes.
+
+Add your preferred license here if the project is released publicly.
+
+---
+
+## ✂️ SalonX
+
+**Modern salon experience. Powerful management.**
+
+Built with ❤️ using React, Node.js, Express and MongoDB.
+
+````
+
+Save this as:
+
+```text
+README.md
+````
+
+in your **root `Salon` folder**, alongside `package.json`.
+
+Then:
+
+```cmd
+git add README.md
+git commit -m "Add project README"
+git push origin main
+```
+
+**One correction to your current `.gitignore` choice:** since you decided to ignore `.env.example` too, the README above does **not** require committing any `.env.example` file.
